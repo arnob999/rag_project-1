@@ -1,0 +1,6 @@
+/venv
+/.env
+/ing.py
+/ret.py
+/test.py
+/chatbot_rag.py
