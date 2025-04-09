@@ -33,3 +33,38 @@ if index_name not in existing_indexes:
         time.sleep(1)
 
 index = pc.Index(index_name)
+
+embedding = OpenAIEmbeddings(model="text-embedding-3-large")
+vector_store = PineconeVectorStore(index=index, embedding=embedding)
+
+loader = PyPDFDirectoryLoader("Books/")
+raw_documents = loader.load()
+
+text_splitter = RecursiveCharacterTextSplitter(
+    chunk_size = 200,
+    chunk_overlap = 20,
+)
+
+documents = text_splitter.split_documents(raw_documents)
+# print(documents)
+
+# generating id for each entry
+
+i=0
+id=[]
+
+while i<len(documents):
+    id.append(str(i))
+    i+=1
+
+# vector_store.add_documents(documents=documents, ids=id)
+
+from tqdm import tqdm  # Optional: for showing progress bar
+
+batch_size = 100  # You can tune this number
+total_docs = len(documents)
+
+for i in tqdm(range(0, total_docs, batch_size)):
+    batch_docs = documents[i:i+batch_size]
+    batch_ids = id[i:i+batch_size]
+    vector_store.add_documents(documents=batch_docs, ids=batch_ids)
