@@ -41,8 +41,8 @@ loader = PyPDFDirectoryLoader("Books/")
 raw_documents = loader.load()
 
 text_splitter = RecursiveCharacterTextSplitter(
-    chunk_size = 200,
-    chunk_overlap = 20,
+    chunk_size = 600,
+    chunk_overlap = 100,
 )
 
 documents = text_splitter.split_documents(raw_documents)
